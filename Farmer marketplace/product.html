@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - FarmDirect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="product.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">🌾 FarmDirect</div>
+            <div class="nav-menu">
+                <a href="index.html" data-i18n="home">Home</a>
+                <a href="index.html#products" data-i18n="products">Products</a>
+                <a href="index.html#prices" data-i18n="marketPrices">Market Prices</a>
+                <a href="index.html#messages" data-i18n="messages">Messages</a>
+                <a href="index.html#orders" data-i18n="orders">Orders</a>
+                <a href="index.html#cart" data-i18n="cart">Cart (<span id="cart-count">0</span>)</a>
+                <a href="#" onclick="toggleAuth()" id="auth-btn">Login</a>
+                <select id="language-select" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Product Details Container -->
+    <div class="product-details-container">
+        <div class="product-gallery">
+            <div class="main-image-container">
+                <img id="main-product-image" src="" alt="Product Image" class="main-image">
+                <div class="image-zoom-overlay" id="zoom-overlay"></div>
+            </div>
+            <div class="thumbnail-gallery" id="thumbnail-gallery">
+                <!-- Thumbnails will be populated by JS -->
+            </div>
+        </div>
+
+        <div class="product-info">
+            <div class="product-header">
+                <h1 id="product-title">Product Name</h1>
+                <div class="product-rating">
+                    <div class="stars" id="product-stars">★★★★★</div>
+                    <span id="product-reviews">(0 reviews)</span>
+                </div>
+                <div class="product-badges" id="product-badges">
+                    <!-- Badges will be populated by JS -->
+                </div>
+            </div>
+
+            <div class="product-price-section">
+                <div class="price">₹<span id="product-price">0.00</span></div>
+                <div class="quantity-info">Available: <span id="product-quantity">0</span> units</div>
+            </div>
+
+            <div class="product-description" id="product-description">
+                Product description will be loaded here.
+            </div>
+
+            <div class="product-tags" id="product-tags">
+                <!-- Tags will be populated by JS -->
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" id="add-to-cart-btn">Add to Cart</button>
+                <button class="btn-secondary" id="buy-now-btn">Buy Now</button>
+                <button class="btn-secondary" id="chat-farmer-btn">Chat with Farmer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Insights Section -->
+    <section class="market-insights">
+        <h2>Market Insights</h2>
+        <div class="insights-grid">
+            <div class="insight-card">
+                <h3>Today's Mandi Price Range</h3>
+                <div class="price-range">
+                    <span class="min-price">₹<span id="min-price">0.00</span></span>
+                    <span class="max-price">₹<span id="max-price">0.00</span></span>
+                </div>
+                <div class="farmer-price">Farmer Listed: ₹<span id="farmer-price">0.00</span></div>
+                <div class="average-price">Average: ₹<span id="average-price">0.00</span></div>
+            </div>
+            <div class="insight-card">
+                <h3>Market Trend</h3>
+                <canvas id="market-chart" width="400" height="200"></canvas>
+                <div class="chart-info">
+                    <small>Prices updated today • Based on 25 markets</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Price Recommendation Section -->
+    <section class="ai-recommendation">
+        <h2>AI Price Recommendation</h2>
+        <div class="recommendation-card">
+            <div class="recommendation-header">
+                <h3>Recommended Price Range</h3>
+                <div class="demand-meter">
+                    <div class="demand-label">Demand: <span id="demand-level">Medium</span></div>
+                    <div class="meter-container">
+                        <div class="meter-fill" id="demand-meter-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="recommendation-content">
+                <div class="price-recommendation">
+                    <span class="rec-price">₹<span id="rec-min-price">0.00</span> - ₹<span id="rec-max-price">0.00</span></span>
+                    <small>Based on current market conditions</small>
+                </div>
+                <div class="ai-insights" id="ai-insights">
+                    <!-- AI insights will be populated by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details Section -->
+    <section class="product-details-section">
+        <h2>Product Details</h2>
+        <div class="details-table">
+            <div class="detail-row">
+                <span class="detail-label">Category:</span>
+                <span class="detail-value" id="detail-category">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Harvest Date:</span>
+                <span class="detail-value" id="detail-harvest-date">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Shelf Life:</span>
+                <span class="detail-value" id="detail-shelf-life">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Organic Certification:</span>
+                <span class="detail-value" id="detail-organic">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Storage Instructions:</span>
+                <span class="detail-value" id="detail-storage">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Delivery Timeline:</span>
+                <span class="detail-value" id="detail-delivery">-</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Farmer Details Section -->
+    <section class="farmer-details">
+        <h2>Farmer Details</h2>
+        <div class="farmer-card">
+            <div class="farmer-avatar">
+                <img id="farmer-avatar" src="" alt="Farmer Avatar">
+            </div>
+            <div class="farmer-info">
+                <h3 id="farmer-name">Farmer Name</h3>
+                <div class="farmer-rating">
+                    <div class="stars" id="farmer-stars">★★★★★</div>
+                    <span id="farmer-reviews">(0 reviews)</span>
+                </div>
+                <div class="farmer-badges" id="farmer-badges">
+                    <!-- Farmer badges will be populated by JS -->
+                </div>
+                <div class="farmer-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="farmer-orders">0</span>
+                        <span class="stat-label">Orders</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="farmer-experience">0</span>
+                        <span class="stat-label">Years Exp.</span>
+                    </div>
+                </div>
+                <div class="farmer-location" id="farmer-location">Location</div>
+                <div class="farmer-bio" id="farmer-bio">Farmer bio will be loaded here.</div>
+                <div class="farmer-actions">
+                    <button class="btn-secondary" id="view-farmer-btn">View Profile</button>
+                    <button class="btn-primary" id="chat-farmer-detail-btn">Chat with Farmer</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+        <h2>Customer Reviews</h2>
+        <div class="reviews-container" id="reviews-container">
+            <!-- Reviews will be populated by JS -->
+        </div>
+    </section>
+
+    <!-- Delivery & Trust Section -->
+    <section class="trust-section">
+        <h2>Why Choose Us</h2>
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <div class="badge-icon">🔒</div>
+                <h4>Secure Payments</h4>
+                <p>100% secure payment processing</p>
+            </div>
+            <div class="trust-badge">
+                <div class="badge-icon">✅</div>
+                <h4>Quality Assured</h4>
+                <p>Fresh and authentic products</p>
+            </div>
+            <div class="trust-badge">
+                <div class="badge-icon">🚚</div>
+                <h4>On-time Delivery</h4>
+                <p>Guaranteed timely delivery</p>
+            </div>
+            <div class="trust-badge">
+                <div class="badge-icon">↩️</div>
+                <h4>Easy Returns</h4>
+                <p>Hassle-free return policy</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals and Overlays -->
+    <div id="image-modal" class="modal">
+        <span class="close" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modal-image">
+    </div>
+
+    <script src="script.js"></script>
+    <script src="product.js"></script>
+</body>
+</html>

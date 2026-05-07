@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Login - FarmDirect</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1rem;
+            color: #27ae60;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .google-btn {
+            background: white;
+            color: #555;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">🌾 FarmDirect</div>
+            <div class="nav-menu">
+                <a href="index.html">Marketplace</a>
+                <a href="login.html">Login Options</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="login-page">
+        <!-- Login Form -->
+        <div id="login-form-container" class="login-card">
+            <h1>Farmer Login</h1>
+            <p>Access your farmer dashboard</p>
+            <form id="farmer-login-form" style="margin-top: 1.5rem;">
+                <input type="text" id="login-email" placeholder="Email or Phone Number" class="input-field" required>
+                <input type="password" id="login-password" placeholder="Password" class="input-field" required>
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <a href="#" style="color: #27ae60; font-size: 0.8rem;">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Login</button>
+            </form>
+
+            <button class="btn-secondary google-btn">
+                <img src="https://www.google.com/favicon.ico" width="16" height="16"> Continue with Google
+            </button>
+
+            <p class="auth-toggle" onclick="toggleAuthForms()">New here? Create a Farmer Account</p>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form-container" class="login-card hidden">
+            <h1>Farmer Registration</h1>
+            <p>Start selling your produce directly</p>
+            <form id="farmer-register-form" style="margin-top: 1.5rem;">
+                <input type="text" id="reg-name" placeholder="Full Name" class="input-field" required>
+                <input type="email" id="reg-email" placeholder="Email Address" class="input-field" required>
+                <input type="tel" id="reg-phone" placeholder="Phone Number" class="input-field" required>
+                <input type="password" id="reg-password" placeholder="Password" class="input-field" required>
+                <textarea id="reg-address" placeholder="Farm Address/Location" class="input-field"
+                    style="height: 80px;"></textarea>
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-size: 0.8rem; color: #666;">Profile Photo (Optional)</label>
+                    <input type="file" id="reg-photo" class="input-field" accept="image/*">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+
+            <p class="auth-toggle" onclick="toggleAuthForms()">Already have an account? Login</p>
+        </div>
+    </main>
+
+    <script>
+        function toggleAuthForms() {
+            document.getElementById('login-form-container').classList.toggle('hidden');
+            document.getElementById('register-form-container').classList.toggle('hidden');
+        }
+
+        const API_BASE_URL = (window.location.port === '3000')
+            ? window.location.origin
+            : 'http://localhost:3000';
+
+        document.getElementById('farmer-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    if (data.user.role !== 'farmer') {
+                        alert('This account is not a Farmer account.');
+                        return;
+                    }
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'farmer-profile.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert('Login failed. Ensure the server is running at ' + API_BASE_URL);
+            }
+        });
+
+        document.getElementById('farmer-register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+            const address = document.getElementById('reg-address').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, phone, password, address, role: 'farmer' })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'farmer-profile.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert('Registration failed. Ensure the server is running at ' + API_BASE_URL);
+            }
+        });
+    </script>
+</body>
+
+</html>

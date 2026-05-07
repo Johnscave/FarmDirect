@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmDirect - Fair Trade Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">🌾 FarmDirect</div>
+            <div class="nav-menu">
+                <a href="#" onclick="showSection('home')" id="nav-home" data-i18n="home">Home</a>
+                <a href="#" onclick="showSection('products')" id="nav-products" data-i18n="products">Products</a>
+                <a href="#" onclick="showSection('prices')" id="nav-prices" data-i18n="marketPrices">Market Prices</a>
+                <a href="#" onclick="showSection('messages')" id="nav-messages" data-i18n="messages">Messages</a>
+                <a href="#" onclick="showSection('orders')" id="nav-orders" data-i18n="orders">Orders</a>
+                <a href="#" onclick="showSection('cart')" id="nav-cart" data-i18n="cart">Cart (<span
+                        id="cart-count">0</span>)</a>
+                <a href="#" onclick="toggleAuth()" id="auth-btn">Login</a>
+                <select id="language-select" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Modal (Legacy, keep if needed for structure) -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuth()">&times;</span>
+            <h2 id="login-heading" data-i18n="loginHeading">Login to FarmDirect</h2>
+            <input type="text" id="email" placeholder="Email/Phone No" class="input-field"
+                data-i18n-placeholder="emailPhone">
+            <input type="text" id="username" placeholder="Username" class="input-field"
+                data-i18n-placeholder="username">
+            <input type="password" id="password" placeholder="Password" class="input-field"
+                data-i18n-placeholder="password">
+            <select id="role" class="input-field">
+                <option value="buyer">I'm a Buyer</option>
+                <option value="farmer">I'm a Farmer</option>
+            </select>
+            <button onclick="login()" class="btn-primary" id="login-button" data-i18n="loginButton">Login /
+                Register</button>
+        </div>
+    </div>
+
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="hero">
+            <h1 id="hero-title" data-i18n="heroTitle">Welcome to FarmDirect</h1>
+            <p id="hero-subtitle" data-i18n="heroSubtitle">Connecting Farmers with Buyers - Fair Prices in Indian Rupees
+                (₹)</p>
+            <button onclick="showSection('products')" class="btn-primary" id="hero-cta" data-i18n="startShopping">Start
+                Shopping</button>
+        </div>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Direct Listings</h3>
+                <p>Farmers list products directly with transparent pricing</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Fair Prices in INR</h3>
+                <p>Real-time market price updates in Indian Rupees for informed decisions</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>Direct Communication</h3>
+                <p>Chat directly with farmers or buyers</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3>Easy Payment</h3>
+                <p>Secure online payment system</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <h3>Order Tracking</h3>
+                <p>Track your orders in real-time</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌱</div>
+                <h3>Sustainability</h3>
+                <p>Support local farming and sustainable practices</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="section">
+        <div class="container">
+            <h2>Available Products</h2>
+            <div class="filter-section">
+                <div class="search-with-voice">
+                    <input type="text" id="search-products" placeholder="Search products..." onkeyup="filterProducts()"
+                        class="input-field" data-i18n-placeholder="searchProducts">
+                    <button type="button" class="btn-voice" id="voice-search-button" onclick="startVoiceSearch()"
+                        data-i18n="voiceSearch">🎙️ Voice Search</button>
+                </div>
+                <select id="category-filter" onchange="filterProducts()" class="input-field">
+                    <option value="">All Categories</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Honey">Honey</option>
+                </select>
+            </div>
+            <div id="products-grid" class="products-grid"></div>
+        </div>
+    </section>
+
+    <!-- Market Prices Section -->
+    <section id="prices" class="section">
+        <div class="container">
+            <h2>Market Price Updates</h2>
+            <button onclick="refreshPrices()" class="btn-secondary">Refresh Prices</button>
+            <a href="https://www.google.com/search?q=market+vahini" target="_blank" class="btn-primary" style="text-decoration: none; display: inline-block; margin-left: 10px;">Live Market</a>
+            <div id="prices-table" class="prices-table"></div>
+        </div>
+    </section>
+
+    <!-- Messages Section -->
+    <section id="messages" class="section">
+        <div class="container">
+            <h2>Direct Messages</h2>
+            <div class="messages-container">
+                <div class="conversations-list" id="conversations-list"></div>
+                <div class="chat-area">
+                    <div id="chat-header" class="chat-header">Select a conversation</div>
+                    <div id="messages-display" class="messages-display"></div>
+                    <div class="message-input-area">
+                        <input type="text" id="message-input" placeholder="Type a message..." class="input-field"
+                            onkeypress="handleMessageKeypress(event)">
+                        <button onclick="sendMessage()" class="btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart -->
+    <section id="cart" class="section">
+        <div class="container">
+            <h2>Shopping Cart</h2>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <p>Subtotal: ₹<span id="subtotal">0.00</span></p>
+                <p>Shipping: ₹<span id="shipping">415.00</span></p>
+                <h4>Total: ₹<span id="total">415.00</span></h4>
+                <button onclick="proceedToPayment()" class="btn-primary" id="checkout-btn">Proceed to Payment</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section id="payment" class="section">
+        <div class="container">
+            <h2>Payment</h2>
+            <div class="payment-form">
+                <h3>Enter Payment Details</h3>
+                <input type="text" placeholder="Full Name" class="input-field">
+                <input type="email" placeholder="Email" class="input-field">
+                <input type="text" placeholder="Card Number (16 digits)" class="input-field">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" placeholder="MM/YY" class="input-field" style="flex: 1;">
+                    <input type="text" placeholder="CVV" class="input-field" style="flex: 1;">
+                </div>
+                <input type="text" placeholder="Delivery Address" class="input-field">
+                <button onclick="processPayment()" class="btn-primary">Pay Now</button>
+                <button onclick="showSection('cart')" class="btn-secondary">Back to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="orders" class="section">
+        <div class="container">
+            <h2>Order Tracking</h2>
+            <div id="orders-list" class="orders-list"></div>
+        </div>
+    </section>
+
+    <!-- Add Product Modal (for farmers) -->
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddProductModal()">&times;</span>
+            <h2>List a New Product</h2>
+            <input type="text" id="product-name" placeholder="Product Name" class="input-field">
+            <select id="product-category" class="input-field">
+                <option value="">Select Category</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Fruits">Fruits</option>
+                <option value="Grains">Grains</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Honey">Honey</option>
+            </select>
+            <input type="number" id="product-price" placeholder="Price per unit (₹)" class="input-field">
+            <input type="number" id="product-quantity" placeholder="Quantity available" class="input-field">
+            <textarea id="product-description" placeholder="Product Description" class="input-field"></textarea>
+            <button onclick="addProduct()" class="btn-primary">List Product</button>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductDetailsModal()">&times;</span>
+            <h2 id="detail-title">Product Details</h2>
+            <div class="product-detail-body">
+                <div id="detail-icon" class="product-header" style="font-size: 3rem; text-align: center;"></div>
+                <div class="detail-row"><strong>Name:</strong> <span id="detail-name"></span></div>
+                <div class="detail-row"><strong>Category:</strong> <span id="detail-category"></span></div>
+                <div class="detail-row"><strong>Price:</strong> <span id="detail-price"></span></div>
+                <div class="detail-row"><strong>Availability:</strong> <span id="detail-quantity"></span></div>
+                <div class="detail-row"><strong>Description:</strong> <span id="detail-description"></span></div>
+                <h3>Farmer Details</h3>
+                <div class="detail-row"><strong>Name:</strong> <span id="detail-farmer-name"></span></div>
+                <div class="detail-row"><strong>Location:</strong> <span id="detail-farmer-location"></span></div>
+                <div class="detail-row"><strong>Phone:</strong> <span id="detail-farmer-phone"></span></div>
+                <div class="detail-row"><strong>Email:</strong> <span id="detail-farmer-email"></span></div>
+                <div class="detail-row"><strong>Rating:</strong> <span id="detail-farmer-rating"></span></div>
+                <div class="detail-row"><strong>Experience:</strong> <span id="detail-farmer-experience"></span></div>
+                <div class="detail-row"><strong>About:</strong> <span id="detail-farmer-bio"></span></div>
+                <div class="product-actions" style="margin-top: 1rem; gap: 0.75rem; flex-wrap: wrap;">
+                    <button id="detail-add-button" class="btn-primary">Add to Cart</button>
+                    <button id="detail-message-button" class="btn-secondary">Message Farmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

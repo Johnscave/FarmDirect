@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmDirect Login Options</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">🌾 FarmDirect</div>
+            <div class="nav-menu">
+                <a href="index.html" data-i18n="marketplace">Marketplace</a>
+                <a href="login.html" data-i18n="loginOptions">Login Options</a>
+                <select id="language-select" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="login-page">
+        <div class="login-card">
+            <h1 data-i18n="chooseLogin">Choose Your Login</h1>
+            <p data-i18n="selectAccountType">Select the account type to continue.</p>
+            <div style="display: grid; gap: 1rem; margin-top: 1.5rem;">
+                <button onclick="window.location.href='buyer-login.html'" class="btn-primary"
+                    data-i18n="buyerLoginTitle">Buyer Login</button>
+                <button onclick="window.location.href='farmer-login.html'" class="btn-primary"
+                    data-i18n="farmerLoginTitle">Farmer Login</button>
+            </div>
+            <button onclick="window.location.href='index.html'" class="btn-secondary" style="margin-top: 1.5rem;"
+                data-i18n="backToMarketplace">Back to Marketplace</button>
+        </div>
+    </main>
+    <script src="login.js"></script>
+</body>
+
+</html>
